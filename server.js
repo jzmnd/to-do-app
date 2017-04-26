@@ -11,7 +11,8 @@ var bodyParser = require('body-parser');                // pull information from
 var methodOverride = require('method-override');        // simulate DELETE and PUT (express4)
 
 // Configuration
-var ROOT = __dirname;
+var ROOT = __dirname;                                   // root directory
+var PORT = process.env.PORT || 8080;                    // express app port
 var config = require(ROOT + '/config.json');            // json config file
 
 // Set up postgreql database with sequelize
@@ -20,12 +21,13 @@ var seq = new Sequelize(config.db.database, config.db.username, config.db.passwo
 seq
   .authenticate()
   .then(function(err) {
-    console.log('Connection has been established successfully.');
+    console.log('Database connection has been established successfully');
   })
-  .catch(function (err) {
+  .catch(function(err) {
     console.log('Unable to connect to the database:', err);
   });
 
+// Set up Todo item model
 var Todo = seq.define('todoItem', {
   text: Sequelize.STRING,
   done: {
@@ -34,10 +36,10 @@ var Todo = seq.define('todoItem', {
   }
 });
 
-//Todo.sync({force: true});
+Todo.sync();
 
 // Set up Express app
-app.use(express.static(ROOT + '/public'));                      // set the static files location /public/img will be /img for users
+app.use(express.static(ROOT + '/public'));                      // set the static files location
 app.use(morgan('dev'));                                         // log every request to the console
 app.use(bodyParser.urlencoded({
   extended: true
@@ -49,16 +51,16 @@ app.use(bodyParser.json({
 app.use(methodOverride());
 
 // Routing
-// GET all todos
+// --- GET all todos
 app.get('/api/todos', function(req, res) {
   Todo
   .findAll()
   .then(function(todos) {
-    console.log(todos.length);
+    console.log(todos.length + " items in database");
     res.json(todos);
   });
 });
-// Create todo and send back all todos after creation
+// --- Create todo and send back all todos after creation
 app.post('/api/todos', function(req, res) {
   console.log(req.body.text);
   Todo
@@ -70,11 +72,12 @@ app.post('/api/todos', function(req, res) {
     Todo
     .findAll()
     .then(function(todos) {
+      console.log(todos.length + " items in database");
       res.json(todos);
     });
   });
 });
-// Delete a todo
+// --- Delete a todo and send back all todos after deletion
 app.delete('/api/todos/:todo_id', function(req, res) {
   Todo
   .destroy({
@@ -84,15 +87,17 @@ app.delete('/api/todos/:todo_id', function(req, res) {
     Todo
     .findAll()
     .then(function(todos) {
+      console.log(todos.length + " items in database");
       res.json(todos);
     });
   });
 });
-// Application
+// --- Application routing
 app.get('/', function(req, res) {
     res.sendFile(ROOT + '/public/index.html');      // load the single view file (angular will handle the page changes on the front-end)
 });
 
-// Listen on port 8080
-app.listen(8080);
-console.log("App listening on port 8080");
+// Listen
+app.listen(PORT, function() {
+  console.log("App listening on port: " + PORT);
+});
