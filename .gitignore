@@ -1,0 +1,23 @@
+# Data and tests
+tests/
+
+# Node modules and dependencies
+node_modules/
+jspm_packages/
+
+# DS Store
+.DS_Store
+
+# Config
+config.json
+
+# Log files
+*.log
+logs/
+npm-debug.log*
+
+# Optional npm cache directory
+.npm
+
+# dotenv environment variables file
+.env
