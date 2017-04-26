@@ -65,8 +65,8 @@ app.post('/api/todos', function(req, res) {
   console.log(req.body.text);
   Todo
   .create({
-    text : req.body.text,
-    done : false
+    text: req.body.text,
+    done: false
   })
   .then(function(todo) {
     Todo
@@ -81,7 +81,9 @@ app.post('/api/todos', function(req, res) {
 app.delete('/api/todos/:todo_id', function(req, res) {
   Todo
   .destroy({
-    id : req.params.todo_id
+    where: {
+      id: req.params.todo_id
+    }
   })
   .then(function(todo) {
     Todo
