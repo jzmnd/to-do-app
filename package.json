@@ -4,6 +4,7 @@
   "description"  : "Simple todo application.",
   "main"         : "server.js",
   "author"       : "Jeremy Smith",
+  "repository"   : "https://github.com/jzmnd/to-do-app.git",
   "dependencies" : {
     "body-parser"    : ">=1.4.3",
     "express"        : ">=4.13.4",
@@ -12,5 +13,7 @@
     "pg"             : ">=6.1.5",
     "pg-hstore"      : ">=2.3.2",
     "sequelize"      : ">=3.30.4"
-  }
+  },
+  "main"         : "server.js",
+  "engine"       : "node >= 0.10"
 }
